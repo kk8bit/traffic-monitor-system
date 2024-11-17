@@ -2,12 +2,34 @@
 # 添加这个来确保脚本在遇到错误时立即退出
 set -e
 
+# ASCII Art Logo
+show_logo() {
+    cat << "EOF"
+
+                                            
+██╗  ██╗██╗  ██╗ █████╗ ██████╗ ██╗████████╗
+██║ ██╔╝██║ ██╔╝██╔══██╗██╔══██╗██║╚══██╔══╝
+█████╔╝ █████╔╝ ╚█████╔╝██████╔╝██║   ██║   
+██╔═██╗ ██╔═██╗ ██╔══██╗██╔══██╗██║   ██║   
+██║  ██╗██║  ██╗╚█████╔╝██████╔╝██║   ██║   
+╚═╝  ╚═╝╚═╝  ╚═╝ ╚════╝ ╚═════╝ ╚═╝   ╚═╝   
+
+EOF
+}
+
+# GitHub地址提示
+show_github_link() {
+    echo -e "\e[31mGitHub地址：https://github.com/kk8bit/traffic-monitor-system\e[0m\n\n"
+}
+
 # 检查是否是root用户
 if [[ $EUID -ne 0 ]]; then
    echo "此脚本必须以root权限运行。请使用sudo运行。" 
    exit 1
 fi
 
+show_logo
+show_github_link
 echo "开始安装流量监控系统..."
 
 # 更新系统包

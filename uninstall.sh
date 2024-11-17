@@ -1,4 +1,27 @@
 #!/bin/bash
+
+# ASCII Art Logo
+show_logo() {
+    cat << "EOF"
+
+                                            
+██╗  ██╗██╗  ██╗ █████╗ ██████╗ ██╗████████╗
+██║ ██╔╝██║ ██╔╝██╔══██╗██╔══██╗██║╚══██╔══╝
+█████╔╝ █████╔╝ ╚█████╔╝██████╔╝██║   ██║   
+██╔═██╗ ██╔═██╗ ██╔══██╗██╔══██╗██║   ██║   
+██║  ██╗██║  ██╗╚█████╔╝██████╔╝██║   ██║   
+╚═╝  ╚═╝╚═╝  ╚═╝ ╚════╝ ╚═════╝ ╚═╝   ╚═╝   
+
+EOF
+}
+
+# GitHub地址提示
+show_github_link() {
+    echo -e "\e[31mGitHub地址：https://github.com/kk8bit/traffic-monitor-system\e[0m\n\n"
+}
+
+show_logo
+show_github_link
 echo "开始卸载流量监控系统..."
 
 # 检查服务是否正在运行
@@ -36,9 +59,10 @@ sudo rm /usr/local/bin/menu.sh
 sudo rm /usr/local/bin/uninstall.sh
 
 # 删除菜单的软链接
-sudo rm /usr/local/bin/ll
+sudo rm /usr/local/bin/monitor
 
 # 删除日志目录
 sudo rm -r /var/log/traffic_monitor
 
-echo "流量监控系统已成功卸载。"
+# 卸载成功提示
+echo -e "\e[32m流量监控系统已成功卸载。\e[0m"
