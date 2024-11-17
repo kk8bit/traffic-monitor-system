@@ -64,16 +64,16 @@ while true; do
         1) 
             nload -u H -m ens5 ;;
         2) iftop -i ens5 ;;
-        3) vnstat -i ens5 -h | awk 'NR==1{print "ens5  /  小时流量统计"} NR>1{sub(/hour/, "时间"); sub(/rx/, "接收"); sub(/tx/, "发送"); sub(/total/, "总计"); sub(/avg. rate/, "平均速率"); print}' || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
+        3) vnstat -i ens5 -h | awk 'BEGIN{print "ens5  /  小时流量统计"} NR>1{print}' | sed 's/hour/时间/; s/rx/接收/; s/tx/发送/; s/total/总计/; s/avg. rate/平均速率/' || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
         4)
             # 获取今日日期
             today=$(date +%Y-%m-%d)
             # 获取7天前的日期
             seven_days_ago=$(date -d "$today -6 days" +%Y-%m-%d)
             # 使用vnstat查看7天内的流量统计并中文化输出
-            vnstat -i ens5 -d --begin "$seven_days_ago" --end "$today" | awk 'NR==1{print "ens5  /  每日流量统计"} NR>1{sub(/day/, "日期"); sub(/rx/, "接收"); sub(/tx/, "发送"); sub(/total/, "总计"); sub(/avg. rate/, "平均速率"); print}' || echo "无法获取7日流量统计。请检查vnstat服务是否已安装并运行。" ;;
+            vnstat -i ens5 -d --begin "$seven_days_ago" --end "$today" | awk 'BEGIN{print "ens5  /  每日流量统计"} NR>1{print}' | sed 's/day/日期/; s/rx/接收/; s/tx/发送/; s/total/总计/; s/avg. rate/平均速率/' || echo "无法获取7日流量统计。请检查vnstat服务是否已安装并运行。" ;;
         5) 
-            vnstat -i ens5 -m | awk 'NR==1{print "ens5  /  月度流量统计"} NR>1{sub(/month/, "月份"); sub(/rx/, "接收"); sub(/tx/, "发送"); sub(/total/, "总计"); sub(/avg. rate/, "平均速率"); sub(/estimated/, "预计"); print}' || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
+            vnstat -i ens5 -m | awk 'BEGIN{print "ens5  /  月度流量统计"} NR>1{print}' | sed 's/month/月份/; s/rx/接收/; s/tx/发送/; s/total/总计/; s/avg. rate/平均速率/; s/estimated/预计/' || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
         6) sudo systemctl start monitor-traffic || echo "无法启动监控服务。" ;;
         7) sudo systemctl stop monitor-traffic || echo "无法停止监控服务。" ;;
         8) sudo systemctl restart monitor-traffic || echo "无法重启监控服务。" ;;
