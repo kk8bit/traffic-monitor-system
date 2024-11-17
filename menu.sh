@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # ASCII Art Logo
 show_logo() {
     cat << "EOF"
@@ -14,12 +13,10 @@ show_logo() {
 
 EOF
 }
-
 # GitHub地址提示
 show_github_link() {
     echo -e "\e[31mGitHub地址：https://github.com/kk8bit/traffic-monitor-system\e[0m\n\n"
 }
-
 format_bytes() {
     local size=$1
     local units=("B" "KB" "MB" "GB" "TB")
@@ -27,7 +24,6 @@ format_bytes() {
     local precision=2
     # 将size转换为整数以进行比较
     local int_size=${size%.*}
-
     while (( int_size >= 1024 )) && [ $i -lt $((${#units[@]}-1)) ]; do
         size=$(echo "scale=$precision; $size / 1024" | bc)
         int_size=${size%.*}  # 再次更新int_size为整数部分
@@ -36,7 +32,6 @@ format_bytes() {
     # 使用printf来格式化输出
     printf "%.${precision}f %s\n" "$size" "${units[$i]}"
 }
-
 show_menu() {
     echo -e "\n请选择一个选项:\n"
     echo "1. 查看实时流量"
@@ -51,25 +46,19 @@ show_menu() {
     echo "0. 退出"
     echo -n "请输入选项 [0-9]: "
 }
-
 # 在脚本开始时显示logo和GitHub地址
 if [ -z "$first_run" ]; then
     show_logo
     show_github_link
     export first_run=1
 fi
-
 while true; do
     show_menu
     read option
-
     case $option in
         1) 
-            output=$(iptables -L ALL_TRAFFIC -v -n -x | awk 'NR==3 {print "Received:", $2, "bytes, Sent:", $10, "bytes"}')
-            recv=$(echo "$output" | awk '{print $2}')
-            sent=$(echo "$output" | awk '{print $6}')
-            printf "\033[32mReceived: %-12s \033[0m\033[34mSent: %-10s\033[0m\n" "$(format_bytes $recv)" "$(format_bytes $sent)"
-            ;;
+            # 选项1的功能变为实时监控网络流量
+            nload -u H -m ens5 ;;
         2) iftop -i ens5 ;;
         3) vnstat -i ens5 -h || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
         4) vnstat -i ens5 -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;

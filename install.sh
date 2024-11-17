@@ -89,4 +89,5 @@ ln -s /usr/local/bin/menu.sh /usr/local/bin/monitor
 wget -O /usr/local/bin/uninstall.sh "https://raw.githubusercontent.com/kk8bit/traffic-monitor-system/main/uninstall.sh" || echo "无法下载uninstall.sh"
 chmod +x /usr/local/bin/uninstall.sh
 
-echo "安装完成！现在可以使用'monitor'命令来调用流量监控菜单。"
+# 安装完成提示
+echo -e "\e[1;32m安装完成！现在可以使用'monitor'命令来调用流量监控菜单。\e[0m"
