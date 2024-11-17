@@ -6,11 +6,17 @@ format_bytes() {
     local i=0
     local precision=2
 
-    while [ "$size" -gt 1024 -a $i -lt $((${#units[@]}-1)) ]; do
+    # 将size转换为整数以进行比较
+    local int_size=${size%.*}
+
+    while (( int_size >= 1024 )) && [ $i -lt $((${#units[@]}-1)) ]; do
         size=$(echo "scale=$precision; $size / 1024" | bc)
+        int_size=${size%.*}  # 再次更新int_size为整数部分
         ((i++))
     done
-    printf "%.${precision}f %s\n" $size ${units[$i]}
+
+    # 使用printf来格式化输出
+    printf "%.${precision}f %s\n" "$size" "${units[$i]}"
 }
 
 show_menu() {
