@@ -1,5 +1,18 @@
 #!/bin/bash
 
+format_bytes() {
+    local size=$1
+    local units=("B" "KB" "MB" "GB" "TB")
+    local i=0
+    local precision=2
+
+    while [ "$size" -gt 1024 -a $i -lt $((${#units[@]}-1)) ]; do
+        size=$(echo "scale=$precision; $size / 1024" | bc)
+        ((i++))
+    done
+    printf "%.${precision}f %s\n" $size ${units[$i]}
+}
+
 show_menu() {
     echo -e "\n请选择一个选项:\n"
     echo "1. 查看当前流量"
@@ -21,7 +34,14 @@ while true; do
     read option
 
     case $option in
-        1) iptables -L ALL_TRAFFIC -v -n -x | awk 'NR==3 {print "Received:", $2, "bytes, Sent:", $10, "bytes"}' ;;
+        1) 
+            output=$(iptables -L ALL_TRAFFIC -v -n -x | awk 'NR==3 {print "Received:", $2, "bytes, Sent:", $10, "bytes"}')
+            recv=$(echo "$output" | awk '{print $2}')
+            sent=$(echo "$output" | awk '{print $6}')
+            echo -e "\033[32m┌─ Received ─┐ \033[0m\033[34m┌─ Sent ─┐\n"
+            printf "\033[32m│ %-12s │ \033[0m\033[34m│ %-10s │\n" "$(format_bytes $recv)" "$(format_bytes $sent)"
+            echo -e "\033[32m└────────────┘ \033[0m\033[34m└────────┘\033[0m"
+            ;;
         2) vnstat -i eth0 -h || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
         3) vnstat -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
         4) nload -u H -m eth0 ;;
