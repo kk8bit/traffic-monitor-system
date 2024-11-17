@@ -65,7 +65,7 @@ while true; do
             nload -u H -m ens5 ;;
         2) 
             iftop -i ens5 || {
-                echo -e "\e[33m注意：查看实时连接需要root权限。请使用sudo再次尝试。\e[0m"
+                echo -e "\e[33m注意：查看实时连接需要root权限。\e[0m"
                 echo -e "\n按任意键继续..."
                 read -n 1 -s -r
                 continue
