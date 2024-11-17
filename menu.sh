@@ -65,7 +65,8 @@ while true; do
             nload -u H -m ens5 ;;
         2) iftop -i ens5 ;;
         3) vnstat -i ens5 -h || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
-        4) vnstat -i ens5 -d -b 7 || echo "无法获取7日流量统计。请检查vnstat服务是否已安装并运行。" ;;
+        4) 
+            vnstat -i ens5 -d --begin $(date -d "-6 days" +%Y-%m-%d) --end $(date +%Y-%m-%d) || echo "无法获取7日流量统计。请检查vnstat服务是否已安装并运行。" ;;
         5) vnstat -i ens5 -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
         6) sudo systemctl start monitor-traffic || echo "无法启动监控服务。" ;;
         7) sudo systemctl stop monitor-traffic || echo "无法停止监控服务。" ;;
