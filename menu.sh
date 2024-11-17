@@ -42,19 +42,17 @@ while true; do
             output=$(iptables -L ALL_TRAFFIC -v -n -x | awk 'NR==3 {print "Received:", $2, "bytes, Sent:", $10, "bytes"}')
             recv=$(echo "$output" | awk '{print $2}')
             sent=$(echo "$output" | awk '{print $6}')
-            echo -e "\033[32m┌─ Received ─┐ \033[0m\033[34m┌─ Sent ─┐\n"
-            printf "\033[32m│ %-12s │ \033[0m\033[34m│ %-10s │\n" "$(format_bytes $recv)" "$(format_bytes $sent)"
-            echo -e "\033[32m└────────────┘ \033[0m\033[34m└────────┘\033[0m"
+            printf "\033[32mReceived: %-12s \033[0m\033[34mSent: %-10s\033[0m\n" "$(format_bytes $recv)" "$(format_bytes $sent)"
             ;;
-        2) vnstat -i eth0 -h || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
-        3) vnstat -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
-        4) nload -u H -m eth0 ;;
-        5) iftop -i eth0 ;;
+        2) vnstat -i ens5 -h || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
+        3) vnstat -i ens5 -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
+        4) nload -u H -m ens5 ;;
+        5) iftop -i ens5 ;;
         6) sudo systemctl start monitor-traffic || echo "无法启动监控服务。" ;;
         7) sudo systemctl stop monitor-traffic || echo "无法停止监控服务。" ;;
         8) sudo systemctl restart monitor-traffic || echo "无法重启监控服务。" ;;
         9) sudo systemctl status monitor-traffic ;;
-        10) sudo -S /usr/local/bin/uninstall.sh ;;
+        10) sudo /usr/local/bin/uninstall.sh ;;
         0) echo "退出菜单"; exit 0 ;;
         *) echo "无效选项，请重新选择" ;;
     esac
