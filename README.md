@@ -47,6 +47,52 @@ monitor
 sudo /usr/local/bin/uninstall.sh
 ```
 
+### 手动卸载
+
+- 这段脚本需要以`root`权限运行，所以我们使用了sudo bash <<'EOF'
+- 该脚本假定`iptables`规则、`systemd`服务、脚本文件和日志目录的位置是按照之前的安装脚本设置的
+- `iptables`规则的删除可能需要手动干预，因为如果链不存在，删除操作会失败
+- 这个卸载脚本不包含任何错误检查或确认步骤，所以请确保你确实想卸载系统再执行
+- 如果你的服务器上的配置有所不同（比如网络接口名称或文件路径），你可能需要相应地调整这些命令
+
+```bash
+sudo bash <<'EOF'
+# 停止并禁用服务
+systemctl stop monitor-traffic
+systemctl disable monitor-traffic
+
+# 删除systemd服务文件
+rm /etc/systemd/system/monitor-traffic.service
+
+# 删除自定义iptables规则
+if iptables -L INPUT | grep -q ALL_TRAFFIC; then
+    iptables -D INPUT -j ALL_TRAFFIC
+fi
+if iptables -L OUTPUT | grep -q ALL_TRAFFIC; then
+    iptables -D OUTPUT -j ALL_TRAFFIC
+fi
+iptables -F ALL_TRAFFIC || echo "无法清空ALL_TRAFFIC链。"
+iptables -X ALL_TRAFFIC || echo "无法删除ALL_TRAFFIC链。"
+
+# 停止并禁用vnstat
+systemctl stop vnstat
+systemctl disable vnstat
+
+# 删除安装的脚本
+rm /usr/local/bin/monitor_traffic.sh
+rm /usr/local/bin/menu.sh
+rm /usr/local/bin/uninstall.sh
+
+# 删除菜单的软链接
+rm /usr/local/bin/monitor
+
+# 删除日志目录
+rm -r /var/log/traffic_monitor
+
+echo "流量监控系统已成功卸载。"
+EOF
+```
+
 ## 注意事项
 
 - 此系统依赖于`iptables`、`vnstat`、`nload`和`iftop`。这些工具必须在系统上可用
