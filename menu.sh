@@ -5,7 +5,6 @@ format_bytes() {
     local units=("B" "KB" "MB" "GB" "TB")
     local i=0
     local precision=2
-
     # 将size转换为整数以进行比较
     local int_size=${size%.*}
 
@@ -14,7 +13,6 @@ format_bytes() {
         int_size=${size%.*}  # 再次更新int_size为整数部分
         ((i++))
     done
-
     # 使用printf来格式化输出
     printf "%.${precision}f %s\n" "$size" "${units[$i]}"
 }
@@ -56,7 +54,7 @@ while true; do
         7) sudo systemctl stop monitor-traffic || echo "无法停止监控服务。" ;;
         8) sudo systemctl restart monitor-traffic || echo "无法重启监控服务。" ;;
         9) sudo systemctl status monitor-traffic ;;
-        10) sudo /usr/local/bin/uninstall.sh ;;
+        10) sudo -S /usr/local/bin/uninstall.sh ;;
         0) echo "退出菜单"; exit 0 ;;
         *) echo "无效选项，请重新选择" ;;
     esac
