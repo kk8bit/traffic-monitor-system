@@ -35,16 +35,15 @@ show_menu() {
     echo "1. 查看实时流量"
     echo "2. 查看实时连接"
     echo "3. 查看小时流量统计"
-    echo "4. 查看今日流量统计"
-    echo "5. 查看昨日流量统计"
-    echo "6. 查看月度流量统计"
-    echo "7. 启动监控服务"
-    echo "8. 停止监控服务"
-    echo "9. 重启监控服务"
-    echo "10. 查看监控服务状态"
-    echo "11. 卸载流量监控系统"
+    echo "4. 查看7日流量统计"
+    echo "5. 查看月度流量统计"
+    echo "6. 启动监控服务"
+    echo "7. 停止监控服务"
+    echo "8. 重启监控服务"
+    echo "9. 查看监控服务状态"
+    echo "10. 卸载流量监控系统"
     echo "0. 退出"
-    echo -n "请输入选项 [0-11]: "
+    echo -n "请输入选项 [0-10]: "
 }
 
 # 在脚本开始时显示logo和GitHub地址
@@ -66,14 +65,13 @@ while true; do
             nload -u H -m ens5 ;;
         2) iftop -i ens5 ;;
         3) vnstat -i ens5 -h || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
-        4) vnstat -i ens5 -d || echo "无法获取今日流量统计。请检查vnstat服务是否已安装并运行。" ;;
-        5) vnstat -i ens5 -d -b 1 || echo "无法获取昨日流量统计。请检查vnstat服务是否已安装并运行。" ;;
-        6) vnstat -i ens5 -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
-        7) sudo systemctl start monitor-traffic || echo "无法启动监控服务。" ;;
-        8) sudo systemctl stop monitor-traffic || echo "无法停止监控服务。" ;;
-        9) sudo systemctl restart monitor-traffic || echo "无法重启监控服务。" ;;
-        10) sudo systemctl status monitor-traffic ;;
-        11) sudo /usr/local/bin/uninstall.sh ;;
+        4) vnstat -i ens5 -d -b 7 || echo "无法获取7日流量统计。请检查vnstat服务是否已安装并运行。" ;;
+        5) vnstat -i ens5 -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
+        6) sudo systemctl start monitor-traffic || echo "无法启动监控服务。" ;;
+        7) sudo systemctl stop monitor-traffic || echo "无法停止监控服务。" ;;
+        8) sudo systemctl restart monitor-traffic || echo "无法重启监控服务。" ;;
+        9) sudo systemctl status monitor-traffic ;;
+        10) sudo /usr/local/bin/uninstall.sh ;;
         0) echo "退出菜单"; exit 0 ;;
         *) echo "无效选项，请重新选择" ;;
     esac
