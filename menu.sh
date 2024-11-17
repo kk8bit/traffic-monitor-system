@@ -70,6 +70,7 @@ while true; do
             today=$(date +%Y-%m-%d)
             # 获取7天前的日期
             seven_days_ago=$(date -d "$today -6 days" +%Y-%m-%d)
+            # 使用vnstat查看7天内的流量统计
             vnstat -i ens5 -d --begin "$seven_days_ago" --end "$today" || echo "无法获取7日流量统计。请检查vnstat服务是否已安装并运行。" ;;
         5) vnstat -i ens5 -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
         6) sudo systemctl start monitor-traffic || echo "无法启动监控服务。" ;;
