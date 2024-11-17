@@ -60,11 +60,11 @@ systemctl daemon-reload
 systemctl start monitor-traffic || echo "monitor-traffic服务启动失败。"
 systemctl enable monitor-traffic || echo "monitor-traffic服务启用失败。"
 
-# 创建ll命令的软链接
-ln -s /usr/local/bin/menu.sh /usr/local/bin/ll
+# 创建monitor命令的软链接
+ln -s /usr/local/bin/menu.sh /usr/local/bin/monitor
 
 # 创建并安装卸载脚本
 wget -O /usr/local/bin/uninstall.sh "https://raw.githubusercontent.com/kk8bit/traffic-monitor-system/main/uninstall.sh" || echo "无法下载uninstall.sh"
 chmod +x /usr/local/bin/uninstall.sh
 
-echo "安装完成！现在可以使用'll'命令来调用流量监控菜单。"
+echo "安装完成！现在可以使用'monitor'命令来调用流量监控菜单。"
