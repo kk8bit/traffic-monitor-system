@@ -33,7 +33,7 @@ format_bytes() {
 show_menu() {
     echo -e "\n请选择一个选项:\n"
     echo "1. 查看实时流量"
-    echo "2. 查看实时连接 (可能需要root权限)"
+    echo "2. 查看实时连接"
     echo "3. 查看小时流量统计"
     echo "4. 查看7日流量统计"
     echo "5. 查看月度流量统计"
@@ -45,18 +45,15 @@ show_menu() {
     echo "0. 退出"
     echo -n "请输入选项 [0-10]: "
 }
-
 # 在脚本开始时显示logo和GitHub地址
 if [ -z "$first_run" ]; then
     show_logo
     show_github_link
     export first_run=1
 fi
-
 # 获取系统时区
 timezone=$(timedatectl show --property=Timezone --value)
 export TZ=$timezone
-
 while true; do
     show_menu
     read option
@@ -65,21 +62,21 @@ while true; do
             nload -u H -m ens5 ;;
         2) 
             iftop -i ens5 || {
-                echo -e "\e[33m注意：查看实时连接需要root权限。\e[0m"
+                echo -e "\e[33m注意：查看实时连接需要root权限。请使用sudo再次尝试。\e[0m"
                 echo -e "\n按任意键继续..."
                 read -n 1 -s -r
                 continue
             } ;;
-        3) vnstat -i ens5 -h | awk 'BEGIN{print "ens5  /  小时流量统计"} NR>1{print}' | sed 's/hour/时间/; s/rx/接收/; s/tx/发送/; s/total/总计/; s/avg. rate/平均速率/' || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
+        3) vnstat -i ens5 -h || echo "无法获取小时流量统计。请检查vnstat服务是否已安装并运行。" ;;
         4)
             # 获取今日日期
             today=$(date +%Y-%m-%d)
             # 获取7天前的日期
             seven_days_ago=$(date -d "$today -6 days" +%Y-%m-%d)
-            # 使用vnstat查看7天内的流量统计并中文化输出
-            vnstat -i ens5 -d --begin "$seven_days_ago" --end "$today" | awk 'BEGIN{print "ens5  /  每日流量统计"} NR>1{print}' | sed 's/day/日期/; s/rx/接收/; s/tx/发送/; s/total/总计/; s/avg. rate/平均速率/' || echo "无法获取7日流量统计。请检查vnstat服务是否已安装并运行。" ;;
+            # 使用vnstat查看7天内的流量统计
+            vnstat -i ens5 -d --begin "$seven_days_ago" --end "$today" || echo "无法获取7日流量统计。请检查vnstat服务是否已安装并运行。" ;;
         5) 
-            vnstat -i ens5 -m | awk 'BEGIN{print "ens5  /  月度流量统计"} NR>1{print}' | sed 's/month/月份/; s/rx/接收/; s/tx/发送/; s/total/总计/; s/avg. rate/平均速率/; s/estimated/预计/' || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
+            vnstat -i ens5 -m || echo "无法获取月度流量统计。请检查vnstat服务是否已安装并运行。" ;;
         6) sudo systemctl start monitor-traffic || echo "无法启动监控服务。" ;;
         7) sudo systemctl stop monitor-traffic || echo "无法停止监控服务。" ;;
         8) sudo systemctl restart monitor-traffic || echo "无法重启监控服务。" ;;
