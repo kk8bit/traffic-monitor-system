@@ -26,6 +26,22 @@ sudo /usr/local/bin/uninstall.sh
 monitor
 ```
 
+### 注意
+
+程序所显示的时间以服务器设置的时区为准，请确保你的服务器时区设置正确。如果你发现你的时间不正确，你可以使用以下命令来同步系统时间：
+
+1. 查看系统时区：
+```bash
+timedatectl
+```
+2. 如果时区不正确，使用以下命令设置正确的时区：(这里以`Asia/Shanghai`为例)：
+```bash
+sudo timedatectl set-timezone Asia/Shanghai
+```
+3. 重启/重装本脚本（过往日志不会丢失）
+
+
+
 ## 菜单选项
 
 1. 查看当前流量 ：显示当前服务器的进出站流量
